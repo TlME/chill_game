@@ -50,6 +50,9 @@ def answer(chill, unchill, paranoia, q):
     if response == 'check stats':
         print("\nchill points: " + str(chill) + "\nunchill points: " + str(unchill) + "\nparanoia level: " + str(paranoia))
         return answer(chill, unchill, paranoia, q)
+    elif (response != 'chill' and response != 'run' and response != 'smoke'):
+        print("\nCurrently you can either chill, run, or smoke.")
+        return answer(chill, unchill, paranoia, q)
     else:
         if (random.randint(0,paranoia) <= 5) :
             return normal(response, chill, unchill, paranoia, q)
