@@ -4,10 +4,10 @@
 # Written for Python v 2.7.12
 
 import madLists, random
-
+versionNumber = 1.02
 
 def mainGame(player_name=''):
-    print("Welcome to Chill or Unchill, a text based adventure game where you make the important decisions.")
+    print("Welcome to Chill or Unchill v." + str(versionNumber) + ", a text based adventure game where you make the important decisions.")
     if player_name == '':
         player_name = raw_input("\nFirst, what is your name, brave traveler? ").title()
     print("\nOk then, {}. You set out on your first adventure starting now. Keep your chill on lock.".format(player_name))
@@ -15,16 +15,16 @@ def mainGame(player_name=''):
     chill = 0
     unchill = 0
     paranoia = 0
-    alive = True
+    dead = False
     #Loop for game
-    while (alive):
+    while not dead:
         q = procSit()
         chill, unchill, paranoia = answer(chill, unchill, paranoia, q)
         if unchill >= 10:
-            alive = False
+            dead = True
             print("You've reached a critical level of unchill. Karma kills you")
         if chill >= 420:
-            alive = False
+            dead = True
             print("Wow, you're quite a patient person, {}. You made it to the end of the game!".format(player_name))
     print("Final score: " + str(chill))
     playAgain(player_name)
@@ -46,16 +46,15 @@ def procSit():
 
     # Answer request and scoring
 def answer(chill, unchill, paranoia, q):
-    response = raw_input("What do you do?").lower()
+    response = raw_input("\nWhat do you do?").lower()
     if response == 'check stats':
         print("\nchill points: " + str(chill) + "\nunchill points: " + str(unchill) + "\nparanoia level: " + str(paranoia))
-        answer(chill, unchill, paranoia, q)
-    if (random.randint(0,paranoia) <= 5) :
-        return normal(response, chill, unchill, paranoia, q)
+        return answer(chill, unchill, paranoia, q)
     else:
-        return paranoid(response, chill, unchill, paranoia, q)
-
-
+        if (random.randint(0,paranoia) <= 5) :
+            return normal(response, chill, unchill, paranoia, q)
+        else:
+            return paranoid(response, chill, unchill, paranoia, q)
 def normal(response, chill, unchill, paranoia, q):
     print ("\nYou " + response + '.')
     if (response == 'chill'):
@@ -84,7 +83,7 @@ def normal(response, chill, unchill, paranoia, q):
             print("\nYou end up having a great time and making a new friend,\n but your new friend keeps talking about " + madLists.para[random.randint(0,14)][0] +
                    ",\n which later give you some existential dread.")
     return chill, unchill, paranoia
-
+# This is randomly used if the player's paranoia level is too high from smoking too much.
 def paranoid(response, chill, unchill, paranoia, q):
     print("\nYou try to " + response + ", but you're feeling too paranoid.")
     print("\nYou accuse them of " + madLists.para[random.randint(0,14)][0])
@@ -94,7 +93,7 @@ def paranoid(response, chill, unchill, paranoia, q):
     elif (-5 < q < 0):
         unchill -= q
         print("\nThe truth hurts. Kind of mean, but you couldn't help yourself.")
-    elif (0 <= q < 5):
+    elif (0 <= q and q < 5):
         unchill += 2 * q
         print("\nThis earns you a nonplussed look as they leave you to your ravings.")
     else:
